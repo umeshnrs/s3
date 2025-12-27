@@ -38,6 +38,68 @@ The website URL will be displayed after running `terraform apply`. You can also 
 
 ```bash
 terraform -chdir=iac output bucket_domain_name
-```
-```
+
 http://vite-react-bucket-12345umesh.s3-website.ap-south-1.amazonaws.com/
+```
+```
+## Destroy Resources (Remove All Infrastructure)
+
+To remove all resources and avoid costs, you can destroy the Terraform infrastructure:
+
+### Option 1: Use Destroy Script (Easiest)
+
+**Linux/Mac:**
+```bash
+cd iac
+chmod +x destroy.sh
+./destroy.sh
+```
+
+**Windows (PowerShell):**
+```powershell
+cd iac
+.\destroy.ps1
+```
+
+### Option 2: Destroy with Auto-Approval (Manual)
+
+```bash
+cd iac
+terraform destroy --auto-approve
+```
+
+This will remove:
+- S3 bucket and all its contents
+- Bucket policies
+- Website configuration
+- Public access settings
+- Ownership controls
+
+### Option 2: Empty Bucket First (If Destroy Fails)
+
+If the bucket contains objects and destroy fails, empty the bucket first:
+
+```bash
+# Get the bucket name from Terraform output
+BUCKET_NAME=$(terraform -chdir=iac output -raw bucket_name)
+
+# Empty the bucket
+aws s3 rm s3://$BUCKET_NAME --recursive
+
+# Then destroy
+terraform -chdir=iac destroy --auto-approve
+```
+
+### Option 3: Force Destroy (Alternative)
+
+If you encounter issues with non-empty buckets, you can force destroy:
+
+```bash
+cd iac
+terraform destroy --auto-approve -force
+```
+
+**Note:** After destroying, verify no resources remain to avoid unexpected costs:
+```bash
+aws s3 ls
+```
