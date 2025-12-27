@@ -11,7 +11,7 @@ Deploy a Vite React application to AWS S3 for static website hosting.
 ## Build the Project
 
 ```bash
-cd vite-react
+cd frontend
 npm run build
 ```
 
@@ -20,7 +20,7 @@ npm run build
 ### 1. Initialize Terraform
 
 ```bash
-cd iac
+cd infrastructure
 terraform init
 ```
 
@@ -34,14 +34,14 @@ terraform apply --auto-approve
 
 **Linux/Mac:**
 ```bash
-cd ../vite-react
-aws s3 sync ./dist s3://$(terraform -chdir=../iac output -raw bucket_name)
+cd ../frontend
+aws s3 sync ./dist s3://$(terraform -chdir=../infrastructure output -raw bucket_name)
 ```
 
 **Windows (PowerShell):**
 ```powershell
-cd ../vite-react
-$BUCKET = terraform -chdir=../iac output -raw bucket_name
+cd ../frontend
+$BUCKET = terraform -chdir=../infrastructure output -raw bucket_name
 aws s3 sync ./dist s3://$BUCKET
 
 aws s3 sync ./dist s3://vite-react-bucket-12345umesh
@@ -57,12 +57,12 @@ aws s3 sync ./dist s3://vite-react-bucket-12345umesh
 Get the website URL:
 
 ```bash
-terraform -chdir=iac output bucket_domain_name
+terraform -chdir=infrastructure output bucket_domain_name
 ```
 
 ## Destroy
 
 ```bash
-cd iac
+cd infrastructure
 terraform destroy --auto-approve
 ```
