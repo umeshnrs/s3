@@ -17,20 +17,15 @@ npm run build
 
 ## Deploy
 
-### 1. Initialize Terraform
+### 1. Initialize and Apply Infrastructure
 
 ```bash
 cd infrastructure
 terraform init
-```
-
-### 2. Apply Infrastructure
-
-```bash
 terraform apply --auto-approve
 ```
 
-### 3. Upload Build Files
+### 2. Upload Build Files
 
 **Linux/Mac:**
 ```bash
@@ -52,7 +47,7 @@ Or use the bucket name directly:
 aws s3 sync ./dist s3://vite-react-bucket-12345umesh
 ```
 
-### 4. Validate
+### 3. Validate
 
 Get the website URL:
 
@@ -62,7 +57,18 @@ terraform -chdir=infrastructure output bucket_domain_name
 
 ## Destroy
 
+**Windows (PowerShell):**
+```powershell
+cd infrastructure
+$BUCKET = terraform output -raw bucket_name
+aws s3 rm s3://$BUCKET --recursive --quiet
+terraform destroy --auto-approve
+```
+
+**Linux/Mac:**
 ```bash
 cd infrastructure
+BUCKET=$(terraform output -raw bucket_name)
+aws s3 rm s3://$BUCKET --recursive --quiet
 terraform destroy --auto-approve
 ```
