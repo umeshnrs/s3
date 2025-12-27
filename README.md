@@ -39,3 +39,5 @@ The website URL will be displayed after running `terraform apply`. You can also 
 ```bash
 terraform -chdir=iac output bucket_domain_name
 ```
+```
+http://vite-react-bucket-12345umesh.s3-website.ap-south-1.amazonaws.com/
